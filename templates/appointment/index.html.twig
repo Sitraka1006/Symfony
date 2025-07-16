@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Appointment index{% endblock %}
+
+{% block body %}
+    <h1>Appointment index</h1>
+
+    <a href="{{ path('appointment_new') }}">Create new</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Client</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for appointment in appointments %}
+            <tr>
+                <td>{{ appointment.id }}</td>
+                <td>{{ appointment.client }}</td>
+                <td>{{ appointment.date ? appointment.date|date('Y-m-d') : '' }}</td>
+                <td>{{ appointment.heure ? appointment.heure|date('H:i') : '' }}</td>
+                <td>
+                    <a href="{{ path('appointment_show', {'id': appointment.id}) }}">show</a>
+                    <a href="{{ path('appointment_edit', {'id': appointment.id}) }}">edit</a>
+                    <form method="post" action="{{ path('appointment_delete', {'id': appointment.id}) }}" onsubmit="return confirm('Are you sure?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ appointment.id) }}">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
